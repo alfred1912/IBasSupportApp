@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
-using IBasSupportApp.Services;   // <-- tilføjet
-using IBasSupportApp.Data;
+using IBasSupportApp.Services;   
 
 var builder = WebApplication.CreateBuilder(args);
 
