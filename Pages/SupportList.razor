@@ -14,13 +14,14 @@ else if (!messages.Any())
 }
 else
 {
-    <table class="table table-striped table-hover">
+    <table class="table table-striped table-hover align-middle">
         <thead class="table-light">
         <tr>
             <th>Navn</th>
             <th>Email</th>
             <th>Telefon</th>
             <th>Kategori</th>
+            <th>Beskrivelse</th>
             <th>Status</th>
             <th>Oprettet</th>
         </tr>
@@ -29,10 +30,11 @@ else
         @foreach (var m in messages)
         {
             <tr>
-                <td>@m.Customer?.Name</td>
-                <td>@m.Customer?.Email</td>
-                <td>@m.Customer?.Phone</td>
+                <td>@m.Name</td>
+                <td>@m.Email</td>
+                <td>@m.Phone</td>
                 <td>@m.Category</td>
+                <td style="max-width: 300px; white-space: normal;">@m.Description</td>
                 <td>@m.Status</td>
                 <td>@m.CreatedAt.ToLocalTime().ToString("dd-MM-yyyy HH:mm")</td>
             </tr>
