@@ -13,7 +13,7 @@ til håndtering af kundehenvendelser om IBAS cykler.
  
 ## Teknologi
 - ASP.NET Core / Blazor Server  
-- Azure CosmosDB (SQL API)  
+- Azure CosmosDB (NoSQL, SQL API)  
 - C#, Razor, JSON  
 
 ## Opsætning af CosmosDB (Azure CLI)
@@ -26,3 +26,8 @@ az cosmosdb create --name ibas-db-account --resource-group IBasSupportRG --enabl
 
 # Opret database
 az cosmosdb sql database crea
+
+##Hvad nåede jeg?
+Jeg nåede egentlig godt i mål med det meste. Næste skridt ville nok være at inddele henvendelserne i status, 
+så man ville kunne trykke på 3 forskellige knapper øverst: åben, under behandling og lukket.
+Derudover ville en slet funktion være fed at implementere.

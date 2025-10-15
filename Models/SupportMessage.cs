@@ -4,15 +4,15 @@ using Newtonsoft.Json;
 
 namespace IBasSupportApp.Models
 {
+    [JsonObject(ItemNullValueHandling = NullValueHandling.Ignore)]
     public class SupportMessage
     {
         [JsonProperty("id")]
         public string Id { get; set; } = Guid.NewGuid().ToString();
-
+        
         [JsonProperty("customer")]
         public CustomerInfo? Customer { get; set; }
-
-        // Fallback-felter hvis gamle dokumenter ikke har "customer"
+        
         [JsonProperty("name")]
         public string? LegacyName { get; set; }
 
@@ -35,8 +35,7 @@ namespace IBasSupportApp.Models
 
         [JsonProperty("status")]
         public string Status { get; set; } = "Åben";
-
-        // Helper properties til visning (kombinerer begge formater)
+        
         [JsonIgnore]
         public string Name => Customer?.Name ?? LegacyName ?? string.Empty;
 
@@ -49,12 +48,16 @@ namespace IBasSupportApp.Models
 
     public class CustomerInfo
     {
+        [Required(ErrorMessage = "Navn skal udfyldes")]
         [JsonProperty("name")]
         public string Name { get; set; } = string.Empty;
 
+        [Required(ErrorMessage = "Email skal udfyldes")]
+        [EmailAddress(ErrorMessage = "Ugyldig email-adresse")]
         [JsonProperty("email")]
         public string Email { get; set; } = string.Empty;
 
+        [Phone(ErrorMessage = "Ugyldigt telefonnummer")]
         [JsonProperty("phone")]
         public string Phone { get; set; } = string.Empty;
     }
