@@ -8,35 +8,40 @@
     <DataAnnotationsValidator />
     <ValidationSummary />
 
-    <div class="form-group">
+    <div class="form-group mb-3">
         <label>Navn</label>
-        <InputText @bind-Value="message.Name" class="form-control" />
+        <InputText @bind-Value="message.Customer.Name" class="form-control" />
+        <ValidationMessage For="@(() => message.Customer.Name)" />
     </div>
 
-    <div class="form-group">
+    <div class="form-group mb-3">
         <label>Email</label>
-        <InputText @bind-Value="message.Email" class="form-control" />
+        <InputText @bind-Value="message.Customer.Email" class="form-control" />
+        <ValidationMessage For="@(() => message.Customer.Email)" />
     </div>
 
-    <div class="form-group">
+    <div class="form-group mb-3">
         <label>Telefon</label>
-        <InputText @bind-Value="message.Phone" class="form-control" />
+        <InputText @bind-Value="message.Customer.Phone" class="form-control" />
+        <ValidationMessage For="@(() => message.Customer.Phone)" />
     </div>
 
-    <div class="form-group">
+    <div class="form-group mb-3">
         <label>Kategori</label>
         <InputText @bind-Value="message.Category" class="form-control" />
+        <ValidationMessage For="@(() => message.Category)" />
     </div>
 
-    <div class="form-group">
+    <div class="form-group mb-3">
         <label>Beskrivelse</label>
         <InputTextArea @bind-Value="message.Description" class="form-control" rows="4" />
+        <ValidationMessage For="@(() => message.Description)" />
     </div>
 
     <button type="submit" class="btn btn-primary">Opret henvendelse</button>
 </EditForm>
 
-@if (successMessage != null)
+@if (!string.IsNullOrEmpty(successMessage))
 {
     <p class="text-success mt-3">@successMessage</p>
 }
@@ -47,8 +52,15 @@
 
     private async Task HandleSubmit()
     {
-        await CosmosService.AddSupportMessageAsync(message);
-        successMessage = "✅ Henvendelsen er gemt!";
-        message = new(); // reset formularen
+        try
+        {
+            await CosmosService.AddSupportMessageAsync(message);
+            successMessage = "✅ Henvendelsen er gemt!";
+            message = new(); // nulstil formular
+        }
+        catch (Exception ex)
+        {
+            successMessage = $"❌ Fejl: {ex.Message}";
+        }
     }
 }
