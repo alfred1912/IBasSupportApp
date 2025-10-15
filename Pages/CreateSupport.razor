@@ -1,0 +1,54 @@
+@page "/create-support"
+@using IBasSupportApp.Models
+@inject IBasSupportApp.Services.CosmosDbService CosmosService
+
+<h3>Opret ny supporthenvendelse</h3>
+
+<EditForm Model="@message" OnValidSubmit="HandleSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="form-group">
+        <label>Navn</label>
+        <InputText @bind-Value="message.Name" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label>Email</label>
+        <InputText @bind-Value="message.Email" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label>Telefon</label>
+        <InputText @bind-Value="message.Phone" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label>Kategori</label>
+        <InputText @bind-Value="message.Category" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label>Beskrivelse</label>
+        <InputTextArea @bind-Value="message.Description" class="form-control" rows="4" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Opret henvendelse</button>
+</EditForm>
+
+@if (successMessage != null)
+{
+    <p class="text-success mt-3">@successMessage</p>
+}
+
+@code {
+    private SupportMessage message = new();
+    private string? successMessage;
+
+    private async Task HandleSubmit()
+    {
+        await CosmosService.AddSupportMessageAsync(message);
+        successMessage = "✅ Henvendelsen er gemt!";
+        message = new(); // reset formularen
+    }
+}

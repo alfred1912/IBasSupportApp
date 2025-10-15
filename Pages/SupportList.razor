@@ -1,0 +1,49 @@
+@page "/support-list"
+@using IBasSupportApp.Models
+@inject IBasSupportApp.Services.CosmosDbService CosmosService
+
+<h3>Supporthenvendelser</h3>
+
+@if (messages == null)
+{
+    <p>Indlæser...</p>
+}
+else if (!messages.Any())
+{
+    <p>Ingen henvendelser fundet.</p>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Navn</th>
+            <th>Email</th>
+            <th>Kategori</th>
+            <th>Status</th>
+            <th>Oprettet</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var m in messages)
+        {
+            <tr>
+                <td>@m.Name</td>
+                <td>@m.Email</td>
+                <td>@m.Category</td>
+                <td>@m.Status</td>
+                <td>@m.CreatedAt.ToLocalTime().ToString("dd-MM-yyyy HH:mm")</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+
+@code {
+    private IEnumerable<SupportMessage>? messages;
+
+    protected override async Task OnInitializedAsync()
+    {
+        messages = await CosmosService.GetAllMessagesAsync();
+    }
+}

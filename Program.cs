@@ -1,28 +1,46 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using IBasSupportApp.Services;   // <-- tilføjet
 using IBasSupportApp.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+string connString = builder.Configuration["CosmosDb:ConnectionString"];
+string dbName = builder.Configuration["CosmosDb:DatabaseName"];
+string container = builder.Configuration["CosmosDb:ContainerName"];
+
+builder.Services.AddSingleton(new CosmosDbService(connString, dbName, container));
+
+// Test Cosmos-forbindelse
+try
+{
+    var testService = new IBasSupportApp.Services.CosmosDbService(connString, dbName, container);
+    Console.WriteLine("✅ CosmosDB connection created successfully.");
+
+  
+    var testData = testService.GetAllMessagesAsync().Result;
+    Console.WriteLine($"✅ Fetched {testData?.Count()} documents from CosmosDB.");
+}
+catch (Exception ex)
+{
+    Console.WriteLine("❌ CosmosDB connection failed: " + ex.Message);
+}
+// test slut
+
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
-builder.Services.AddSingleton<WeatherForecastService>();
+
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
 app.UseHttpsRedirection();
-
 app.UseStaticFiles();
-
 app.UseRouting();
 
 app.MapBlazorHub();
